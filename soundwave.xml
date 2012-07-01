@@ -61,18 +61,15 @@ charset = iso - 8859 - 1 " />
 
 <p>
 <br/>
-<input class="button" type="button" value="Top hat!" id="topHatButton"
-    onClick="showOverlay('topHat')"/>
+<input class="button" type="button" value="Guitar!" id="topHatButton"
+    onClick="showGuiter"/>
 
 <input class="button" type="button" value="Drums" id="monocleButton"
     onClick="showDrums()"/>
 
-<input class="button" type="button" value="Fancy!" id="mustacheButton"
-        onClick="showOverlay('fancy')"/>
-        
 
-<input class="button" type="button" value="Nothing." id="nothingButton"
-			    onClick="showNothing()"/>
+<input class="button" type="button" value="Nothing" id="nothingButton"
+		onClick="showNothing()"/>
 </p>
 	
 </center>

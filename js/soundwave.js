@@ -14,22 +14,22 @@ function getNote(event, bright) {
     if (event.tilt > 0.25) {
       console.log('Up');
       playDrum(0);
-      sayPiano1();
+      drumSound(0);
     }
-    else if (event.tilt < -0.1) {
+    else if (event.tilt < -0.12) {
       console.log('Down');
       playDrum(2);
-      sayPiano1();
+      drumSound(2)
     }
     else if (event.pan > 0.25) {
       console.log('Left');
       playDrum(3);
-      sayPiano1();
+      drumSound(1);
     }
     else if (event.pan < -0.25) {
       console.log('Right');
       playDrum(1);
-      sayPiano1();
+      drumSound(1);
     }
   }
   else if (currentInstrument == 'guitar') {
@@ -56,7 +56,7 @@ window.requestAnimFrame = (function (callback) {
   window.oRequestAnimationFrame ||
   window.msRequestAnimationFrame ||
   function(callback){
-    window.setTimeout(callback, 1000 / 30);
+    window.setTimeout(callback, 1000 / 1);
   };
 })();
 
@@ -85,13 +85,18 @@ function startHeadTracking() {
 
 
 function showDrums() {
+  setTimeout(function(){drumSound(0)}, 0000);
+  setTimeout(function(){drumSound(1)}, 3000);
+  setTimeout(function(){drumSound(2)}, 6000);
+
+  drumSound(1);
+  drumSound(2);
   currentInstrument = 'drum';
-  sayPiano1();
   console.log("showing drums");
   //hideAllOverlays();
   for (var i=0; i<drumsNormal.length; i++) {
     drumsNormal[i].setVisible(true);
-    console.log(drumsNormal[i].getImageResource().getUrl());
+//    console.log(drumsNormal[i].getImageResource().getUrl());
   }
   //hitDrum(3);
 }
@@ -101,6 +106,7 @@ function showGuitar() {
 }
 
 function playDrum(i) {
+  currentInstrument = "drum";
   console.log("hitting drum");
   drumsActive[i].setVisible(true);
   drumsNormal[i].setVisible(false);
@@ -115,22 +121,20 @@ function playGuitar(i){
 }
 
 function showNothing() {
-  currentTime = null;
+  currentInstrument = "";
   hideAllOverlays();
-  setControlVisibility(false);
 }
 
 /** For removing every overlay */
 function hideAllOverlays() {
-  for (var index in overlays) {
-    overlays[index].setVisible(false);
+  for (var i=0; i<drumsNormal.length; i++) {
+    drumsNormal[i].setVisible(false);
   }
 }
 
 /** Initialize our constants, build the overlays */
 function createOverlays() {
   console.log("CREATING OVERLAYS");
-  var instrument = 'drums';
   var scale = 0.1;
   x_pos = [0, -0.45, 0, .44];
   y_pos = [-.4, 0, 0.4, 0];
@@ -249,11 +253,10 @@ var piano1SoundURL =
     'http://www.learner.org/jnorth/sounds/ChordPiano.wav';
 
 
-var piano1Sound = gapi.hangout.av.effects.createAudioResource(
-    piano1SoundURL).createSound();
+var piano1Sound = gapi.hangout.av.effects.createAudioResource(piano1SoundURL).createSound();
 
 
-function sayPiano1() {
+function playPiano1() {
   // There can only be one active resource, Audio or Image.                                                       
   // By playing the sound, we activate this resource                                                              
   // and will automatically hide all the other overlays.                                                          
@@ -265,7 +268,7 @@ function sayPiano1() {
 var drumURLs = ['http://cd.textfiles.com/10000soundssongs/WAV_44S/ELDRUM44.WAV', 'http://www.engr.uvic.ca/~ajoe/3l3c484/output-comp(drum).wav', 
     'http://www.strangefamiliar.com/sound/loops/chaos_handdrums_more-bass.wav'];
 
-function sayDrum(i) {
+function drumSound(i) {
   // There can only be one active resource, Audio or Image.                                                       
   // By playing the sound, we activate this resource                                                              
   // and will automatically hide all the other overlays.                                                          
@@ -274,6 +277,7 @@ function sayDrum(i) {
     var drumSound = gapi.hangout.av.effects.createAudioResource(
         drumURLs[i]).createSound();
     drumSound.play({loop: false, volume:20});
+    setTimeout(function(){return;}, 1000);
 }
 
 
