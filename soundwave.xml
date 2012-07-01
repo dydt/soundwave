@@ -59,6 +59,8 @@ charset = iso - 8859 - 1 " />
 <input class="button" type="button" value="Drums" id="monocleButton"
     onClick="showDrums()"/>
 
+<input class="button" type="button" value="Misc" id="miscButton"
+    onClick="showMisc()"/>
 
 <input class="button" type="button" value="None" id="nothingButton"
 		onClick="showNothing()"/>

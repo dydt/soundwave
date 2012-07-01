@@ -6,49 +6,97 @@ var drumsNormal = [];
 var drumsActive = [];
 var guitarNormal = [];
 var guitarActive = [];
+var miscNormal = [];
+var miscActive = [];
 
 var lastGoodEvent;
 var lastEvent;
 
 var currentInstrument;
 
-var timeoutCounter = 61;
+var timeoutCounter = 56;
 
 
 function getNote(event, hasFace) {
-  if (timeoutCounter > 60) {
-    if (currentInstrument == 'drum') {
-      if (event.tilt > 0.35) {
-        console.log('Up');
-        playDrum(0);
-        drumSound(1);
-        timeoutCounter = 0;
-      }
-      else if (event.tilt < -0.1) {
-        console.log('Down');
-        playDrum(2);
-        drumSound(1);
-        timeoutCounter = 0;
-      }
-      else if (event.pan > 0.25) {
-        console.log('Left');
-        playDrum(3);
-        drumSound(0);
-        timeoutCounter = 0;
-      }
-      else if (event.pan < -0.25) {
-        console.log('Right');
-        playDrum(1);
-        drumSound(0);
-        timeoutCounter = 0;
-      }
+  if ((timeoutCounter > 20) && (currentInstrument == 'drum')) {
+    if (event.tilt > 0.35) {
+      console.log('Up');
+      playDrum(0);
+      drumSound(0);
+      timeoutCounter = 0;
     }
-    else if (currentInstrument == 'guitar') {
-      if (event.pan > 0.3) {
-        console.log('');
-      }
+    else if (event.tilt < -0.1) {
+      console.log('Down');
+      playDrum(2);
+      drumSound(2);
+      timeoutCounter = 0;
     }
-  } else {
+    else if (event.pan > 0.25) {
+      console.log('Left');
+      playDrum(3);
+      drumSound(3);
+      timeoutCounter = 0;
+    }
+    else if (event.pan < -0.25) {
+      console.log('Right');
+      playDrum(1);
+      drumSound(1);
+      timeoutCounter = 0;
+    }
+  }
+  else if ((timeoutCounter > 55) && (currentInstrument == 'guitar')) {
+    if (event.tilt > 0.35) {
+      console.log('Up');
+      playGuitar(0);
+      guitarSound(0);
+      timeoutCounter = 0;
+    }
+    else if (event.tilt < -0.1) {
+      console.log('Down');
+      playGuitar(2);
+      guitarSound(2);
+      timeoutCounter = 0;
+    }
+    else if (event.pan > 0.25) {
+      console.log('Left');
+      playGuitar(3);
+      guitarSound(3);
+      timeoutCounter = 0;
+    }
+    else if (event.pan < -0.25) {
+      console.log('Right');
+      playGuitar(1);
+      guitarSound(1);
+      timeoutCounter = 0;
+    }
+  }
+  else if ((timeoutCounter > 55) && (currentInstrument == 'misc')) {
+    if (event.tilt > 0.35) {
+      console.log('Up');
+      playMisc(0);
+      miscSound(0);
+      timeoutCounter = 0;
+    }
+    else if (event.tilt < -0.1) {
+      console.log('Down');
+      playMisc(2);
+      miscSound(2);
+      timeoutCounter = 0;
+    }
+    else if (event.pan > 0.25) {
+      console.log('Left');
+      playMisc(3);
+      miscSound(3);
+      timeoutCounter = 0;
+    }
+    else if (event.pan < -0.25) {
+      console.log('Right');
+      playMisc(1);
+      miscSound(1);
+      timeoutCounter = 0;
+    }
+  } 
+  else {
     timeoutCounter += 1;
   }
 }
@@ -74,7 +122,6 @@ window.requestAnimFrame = (function (callback) {
   };
 })();
 
-/** Event handler */
 function onFaceTrackingChanged(event) {
   try {
     lastEvent = event;
@@ -87,16 +134,11 @@ function onFaceTrackingChanged(event) {
   }
 }
 
-/** Sets up event handler and shows a topHat
- * from the Media app to indicate who is the current
- * face tracked.
- */
 function startHeadTracking() {
   gapi.hangout.av.effects.onFaceTrackingDataChanged.
       add(onFaceTrackingChanged);
   console.log('Started head tracking');    
 }
-
 
 function showDrums() {
   currentInstrument = 'drum';
@@ -113,6 +155,15 @@ function showGuitar() {
   hideAllOverlays();
   for (var i = 0; i < guitarNormal.length; i++) {
     guitarNormal[i].setVisible(true);
+  }
+}
+
+function showMisc() {
+  currentInstrument = "misc";
+  console.log("showing misc");
+  hideAllOverlays();
+  for (var i = 0; i < miscNormal.length; i++) {
+    miscNormal[i].setVisible(true);
   }
 }
 
@@ -136,12 +187,21 @@ function playGuitar(i) {
   }, 450);
 }
 
+function playMisc(i) {
+  console.log("hitting misc");
+  miscActive[i].setVisible(true);
+  miscNormal[i].setVisible(false);
+  setTimeout(function() {
+    miscNormal[i].setVisible(true);
+    miscActive[i].setVisible(false);
+  }, 450);
+}
+
 function showNothing() {
   currentInstrument = "";
   hideAllOverlays();
 }
 
-/** For removing every overlay */
 function hideAllOverlays() {
   for (var i = 0; i < drumsNormal.length; i++) {
     drumsNormal[i].setVisible(false);
@@ -153,27 +213,13 @@ function hideAllOverlays() {
   }
 }
 
-// //doesn't seem to work!
-// function createGuitar(){
-//   var canvas = document.createElement('canvas');
-//   canvas.setAttribute('width', 10);
-//   canvas.setAttribute('height', 400);
-//   var context = canvas.getContext('2d');
-//   context.lineWidth = 2;
-//   context.beginPath();
-//   context.moveTo(5,5);
-//   context.lineTo(5,300);
-//   context.stroke();
-//   return canvas.toDataURL();
-
-// }
 
 /** Initialize our constants, build the overlays */
 function createOverlays() {
   console.log("CREATING OVERLAYS");
-  var scale = .1;
   x_pos = [0, -0.45, 0, .44];
   y_pos = [-.4, 0, 0.4, 0];
+  var scale = .1;
   for (var i = 0; i < 4; i++){
     var drumURL = root + "images/DrumSH.png?num=" + i.toString();
     var drumImage = gapi.hangout.av.effects.createImageResource(drumURL);
@@ -189,7 +235,7 @@ function createOverlays() {
     var drumActiveImage = gapi.hangout.av.effects.createImageResource(drumActiveURL);
     var drumActiveOverlay = drumActiveImage.createOverlay(
       {
-      'scale': {'magnitude': scale * 1.2, 
+      'scale': {'magnitude': scale * 1.4, 
                 'reference': gapi.hangout.av.effects.ScaleReference.WIDTH},
       'position': {'x': x_pos[i], 'y': y_pos[i] }
       });
@@ -197,8 +243,9 @@ function createOverlays() {
     drumsActive.push(drumActiveOverlay);
   }
 
+  scale = 0.15;
   for (var i = 0; i < 4; i++){
-    var guitarURL = root + "images/guitar.png?num=" + i.toString();
+    var guitarURL = root + "images/guitar2.png?num=" + i.toString();
     var guitarImage = gapi.hangout.av.effects.createImageResource(guitarURL);
     var guitarOverlay = guitarImage.createOverlay(
       {
@@ -208,17 +255,42 @@ function createOverlays() {
       });
     guitarNormal.push(guitarOverlay);
 
-    var guitarActiveURL = root + "images/guitar.png?num=1" + i.toString();
+    var guitarActiveURL = root + "images/guitar2.png?num=1" + i.toString();
     var guitarActiveImage = gapi.hangout.av.effects.createImageResource(guitarActiveURL);
     var guitarActiveOverlay = guitarActiveImage.createOverlay(
       {
-      'scale': {'magnitude': scale * 1.2, 
+      'scale': {'magnitude': scale * 1.4, 
                 'reference': gapi.hangout.av.effects.ScaleReference.WIDTH},
       'position': {'x': x_pos[i], 'y': y_pos[i] }
       });
 
     guitarActive.push(guitarActiveOverlay);
   }
+
+  var images = ['images/piano.png', 'images/violin.png', 
+                'images/viola.png', 'images/flute.png'];
+  for (var i = 0; i < 4; i++) {
+    var URL = root + images[i];
+    var image = gapi.hangout.av.effects.createImageResource(URL);
+    var overlay = image.createOverlay(
+      {
+        'scale': {'magnitude': scale,
+                  'reference': gapi.hangout.av.effects.ScaleReference.WIDTH},
+        'position': {'x': x_pos[i], 'y': y_pos[i]}
+      });
+    miscNormal.push(overlay);
+
+    var activeURL = root + images[i] + '?num=1';
+    var activeImage = gapi.hangout.av.effects.createImageResource(activeURL);
+    var activeOverlay = activeImage.createOverlay(
+      {
+      'scale': {'magnitude': scale * 1.4, 
+                'reference': gapi.hangout.av.effects.ScaleReference.WIDTH},
+      'position': {'x': x_pos[i], 'y': y_pos[i] }
+      });
+
+    miscActive.push(activeOverlay);
+
 }
 
 createOverlays();
@@ -234,18 +306,22 @@ function init() {
 
 // Sound stuff
 
-var stringURLs = [ 'http://www.learner.org/jnorth/sounds/ChordPiano.wav', 'http://amath.colorado.edu/pub/matlab/music/wav/violin_A4.wav', 
-    'http://amath.colorado.edu/pub/matlab/music/wav/viola.wav', 'http://amath.colorado.edu/pub/matlab/music/wav/flute_A5.wav'];
+var stringURLs = ['http://www.learner.org/jnorth/sounds/ChordPiano.wav',
+                  'http://amath.colorado.edu/pub/matlab/music/wav/violin_A4.wav',
+                  'http://amath.colorado.edu/pub/matlab/music/wav/viola.wav',
+                  'http://amath.colorado.edu/pub/matlab/music/wav/flute_A5.wav'];
 
 
-function stringSound(i) {
+function miscSound(i) {
     var stringSound = gapi.hangout.av.effects.createAudioResource(
         stringURLs[i]).createSound();
     stringSound.play({loop: false, volume:120});
 }
 
-var guitarURLs = ['http://soundcavern.free.fr/guitar/Acoustic_Guitar_Chords%20-%20Bmaj.wav', 'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Eminup.wav',
-    'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Amin.wav', 'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Dmin.wav'];
+var guitarURLs = ['http://soundcavern.free.fr/guitar/Acoustic_Guitar_Chords%20-%20Bmaj.wav',
+                  'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Eminup.wav',
+                  'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Amin.wav',
+                  'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Dmin.wav'];
     
 function guitarSound(i) {
     var guitarSound = gapi.hangout.av.effects.createAudioResource(
@@ -253,8 +329,10 @@ function guitarSound(i) {
      guitarSound.play({loop: false, volume:120});
 }
 
-var drumURLs = ['http://machines.hyperreal.org/machines/manufacturers/Sequential/Drumtraks/samples/tmp/Drumtraks/DT_Crash.wav', 'http://home.foni.net/~musiksamples/techno/drums/bddruck.wav', 
-    'http://muselogic.webmage.com/sounds/drums/akayamaha.wav', 'http://bigsamples.free.fr/d_kit/bdkick/909kik.wav'];
+var drumURLs = ['http://machines.hyperreal.org/machines/manufacturers/Sequential/Drumtraks/sample/tmp/Drumtraks/DT_Crash.wav',
+                'http://home.foni.net/~musiksamples/techno/drums/bddruck.wav',
+                'http://muselogic.webmage.com/sounds/drums/akayamaha.wav',
+                'http://bigsamples.free.fr/d_kit/bdkick/909kik.wav'];
 
 function drumSound(i) {   
     var drumSound = gapi.hangout.av.effects.createAudioResource(
