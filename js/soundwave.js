@@ -1,7 +1,7 @@
 var IMG_WIDTH = 320;
 var IMG_HEIGHT = 240;
 
-function getPixelAt(image, x, y){
+ function getPixelAt(image, x, y){
   var index = 4 * (y*IMG_WIDTH + x);
   //console.log(index);
   //console.log(image);
@@ -16,8 +16,10 @@ function handInCorner(image){
   if (sum < 150) {
     console.log("dark!");
   }
+ }
 
-function makesound(sound) {
+
+ function makesound(sound) {
     var noteEvents = [];
     Array.prototype.push.apply(noteEvents, MidiEvent.createNote(sound));
     // Create a track that contains the events to play the notes above
@@ -30,14 +32,16 @@ function makesound(sound) {
     // Play the song
     song.play();
 
-}
+} 
 
 $(document).ready(function() {
     
     // Make this sound!  :D
-    makesound('G4');
+ //   makesound('G4');
     
-	var pos = 0;
+    console.log('hi');
+    
+    var pos = 0;
 	var ctx = null;
 	var saveCB, image = [];
 	var canvas = document.getElementById("canvas");
