@@ -1,4 +1,5 @@
 var root = "http://web.mit.edu/tfleish/www/soundwave/";
+var root = "http://web.mit.edu/lalpert/www/soundwave/soundwave/";
 
 // Track our overlays for re-use later
 var overlays = [];
@@ -85,12 +86,6 @@ function startHeadTracking() {
 
 
 function showDrums() {
-  setTimeout(function(){drumSound(0)}, 0000);
-  setTimeout(function(){drumSound(1)}, 3000);
-  setTimeout(function(){drumSound(2)}, 6000);
-
-  drumSound(1);
-  drumSound(2);
   currentInstrument = 'drum';
   console.log("showing drums");
   //hideAllOverlays();
@@ -98,7 +93,6 @@ function showDrums() {
     drumsNormal[i].setVisible(true);
 //    console.log(drumsNormal[i].getImageResource().getUrl());
   }
-  //hitDrum(3);
 }
 
 function showGuitar() {
@@ -129,18 +123,46 @@ function showNothing() {
 function hideAllOverlays() {
   for (var i=0; i<drumsNormal.length; i++) {
     drumsNormal[i].setVisible(false);
+    drumsActive[i].setVisible(false);
   }
+}
+
+
+function createGuitar(){
+  var canvas = document.createElement('canvas');
+  canvas.setAttribute('width', 10);
+  canvas.setAttribute('height', 400);
+  var context = canvas.getContext('2d');
+  context.lineWidth = 2;
+  context.beginPath();
+  context.moveTo(5,5);
+  context.lineTo(5,300);
+  context.stroke();
+  return canvas.toDataURL();
+
 }
 
 /** Initialize our constants, build the overlays */
 function createOverlays() {
   console.log("CREATING OVERLAYS");
-  var scale = 0.1;
+/*
+  var string1 = gapi.hangout.av.effects.createImageResource(createGuitar());
+  // Create this non-moving overlay that will be 100% of the width
+  // of the video feed.
+  overlays['string1'] = string1.createOverlay();
+  overlays['string1'].setPosition(0, 0);
+  overlays['string1'].setVisible(true);
+*/
+
+ instrument = "drums";
+  var scale = .1;
   x_pos = [0, -0.45, 0, .44];
   y_pos = [-.4, 0, 0.4, 0];
   for (var i = 0; i < 4; i++){
-    //var drumURL = root + "images/" + instrument + i.toString() + ".png";
     var drumURL = 'http://www.veryicon.com/icon/png/Media/Multimedia%202/Drum%20SH.png?num=' + i.toString();
+   // var drumURL = 'http://soundwavefiles.appspot.com/Dandelion.gif'; //?num=' + i.toString();
+    var drumURL = root + "images/" + instrument + i.toString() + ".png";
+    console.log(drumURL);
     var drumImage = gapi.hangout.av.effects.createImageResource(drumURL);
     var drumOverlay = drumImage.createOverlay(
       {
@@ -154,10 +176,12 @@ function createOverlays() {
     //var drumActiveURL = root + "images/" + instrument + "active" + i.toString() + ".png";
     //var drumActiveURL = 'http://hangoutmediastarter.appspot.com/static/mustache.png';
     var drumActiveURL = 'http://www.veryicon.com/icon/png/Media/Multimedia%202/Drum%20SH.png?num=1' + i.toString();
+
     var drumActiveImage = gapi.hangout.av.effects.createImageResource(drumActiveURL);
+
     var drumActiveOverlay = drumActiveImage.createOverlay(
       {
-      'scale': {'magnitude': scale * 1.1, 
+      'scale': {'magnitude': scale * 1.2, 
                 'reference': gapi.hangout.av.effects.ScaleReference.WIDTH},
       'position': {'x': x_pos[i], 'y': y_pos[i] }
       });
