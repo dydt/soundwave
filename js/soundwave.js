@@ -13,31 +13,31 @@ var currentInstrument;
 var timeoutCounter = 61;
 
 
-function getNote(event, bright) {
+function getNote(event, hasFace) {
   if (timeoutCounter > 60) {
     if (currentInstrument == 'drum') {
       if (event.tilt > 0.35) {
         console.log('Up');
         playDrum(0);
-        drumSound(0);
+        drumSound(1);
         timeoutCounter = 0;
       }
       else if (event.tilt < -0.1) {
         console.log('Down');
         playDrum(2);
-        drumSound(2);
+        drumSound(1);
         timeoutCounter = 0;
       }
       else if (event.pan > 0.25) {
         console.log('Left');
         playDrum(3);
-        drumSound(1);
+        drumSound(0);
         timeoutCounter = 0;
       }
       else if (event.pan < -0.25) {
         console.log('Right');
         playDrum(1);
-        drumSound(1);
+        drumSound(0);
         timeoutCounter = 0;
       }
     }
@@ -97,12 +97,6 @@ function startHeadTracking() {
 
 
 function showDrums() {
-  setTimeout(function(){drumSound(0)}, 0000);
-  setTimeout(function(){drumSound(1)}, 3000);
-  setTimeout(function(){drumSound(2)}, 6000);
-
-  drumSound(1);
-  drumSound(2);
   currentInstrument = 'drum';
   console.log("showing drums");
   //hideAllOverlays();
@@ -110,7 +104,6 @@ function showDrums() {
     drumsNormal[i].setVisible(true);
 //    console.log(drumsNormal[i].getImageResource().getUrl());
   }
-  //hitDrum(3);
 }
 
 function showGuitar() {
@@ -118,14 +111,13 @@ function showGuitar() {
 }
 
 function playDrum(i) {
-  currentInstrument = "drum";
   console.log("hitting drum");
   drumsActive[i].setVisible(true);
   drumsNormal[i].setVisible(false);
-  setTimeout(function(){
+  setTimeout(function() {
     drumsNormal[i].setVisible(true);
     drumsActive[i].setVisible(false);
-    },250);
+  }, 450);
 }
 
 function playGuitar(i){
@@ -277,8 +269,9 @@ function playPiano1() {
     piano1Sound.play({loop: false, volume:20});
 }
 
-var drumURLs = ['http://cd.textfiles.com/10000soundssongs/WAV_44S/ELDRUM44.WAV', 'http://www.engr.uvic.ca/~ajoe/3l3c484/output-comp(drum).wav', 
-    'http://www.strangefamiliar.com/sound/loops/chaos_handdrums_more-bass.wav'];
+var drumURLs = ['http://www.engr.uvic.ca/~ajoe/3l3c484/output-comp(drum).wav', 
+                'http://www.strangefamiliar.com/sound/loops/chaos_handdrums_more-bass.wav'
+               ];
 
 function drumSound(i) {
   // There can only be one active resource, Audio or Image.                                                       
