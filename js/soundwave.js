@@ -16,9 +16,27 @@ function handInCorner(image){
   if (sum < 150) {
     console.log("dark!");
   }
+
+function makesound(sound) {
+    var noteEvents = [];
+    Array.prototype.push.apply(noteEvents, MidiEvent.createNote(sound));
+    // Create a track that contains the events to play the notes above
+    var track = new MidiTrack({ events: noteEvents });
+
+    // Creates an object that contains the final MIDI track in base64 and some
+    // useful methods.
+    var song  = MidiWriter({ tracks: [track] });
+
+    // Play the song
+    song.play();
+
 }
 
 $(document).ready(function() {
+    
+    // Make this sound!  :D
+    makesound('G4');
+    
 	var pos = 0;
 	var ctx = null;
 	var saveCB, image = [];
@@ -60,5 +78,7 @@ $(document).ready(function() {
 
     onSave: setImage,
     debug: function (type, string) { console.log(type + ": " + string); }
+    
 	});
 });
+
