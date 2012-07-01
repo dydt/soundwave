@@ -51,24 +51,16 @@ charset = iso - 8859 - 1 " />
 
 
 <center>
-
 <p>
 <br/>
-<input class="button" type="button" value="Good day!" id="topHatButton"
-    onClick="emitGoodDayEvent()"/>
-
-</p>
-
-<p>
-<br/>
-<input class="button" type="button" value="Guitar!" id="topHatButton"
-    onClick="showGuiter"/>
+<input class="button" type="button" value="Guitar" id="topHatButton"
+    onClick="showGuitar()"/>
 
 <input class="button" type="button" value="Drums" id="monocleButton"
     onClick="showDrums()"/>
 
 
-<input class="button" type="button" value="Nothing" id="nothingButton"
+<input class="button" type="button" value="None" id="nothingButton"
 		onClick="showNothing()"/>
 </p>
 	
