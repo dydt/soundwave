@@ -199,22 +199,32 @@ function init() {
 
 // Sound stuff
 
-var piano1SoundURL =
-    'http://www.learner.org/jnorth/sounds/ChordPiano.wav';
+var stringURLs = [ 'http://www.learner.org/jnorth/sounds/ChordPiano.wav', 'http://amath.colorado.edu/pub/matlab/music/wav/violin_A4.wav', 
+    'http://amath.colorado.edu/pub/matlab/music/wav/viola.wav', 'http://amath.colorado.edu/pub/matlab/music/wav/flute_A5.wav'];
 
-var piano1Sound = gapi.hangout.av.effects.createAudioResource(piano1SoundURL).createSound();
 
-function playPiano1() {
-    piano1Sound.play({loop: false, volume:20});
+function stringSound(i) {
+    var stringSound = gapi.hangout.av.effects.createAudioResource(
+        stringURLs[i]).createSound();
+    stringSound.play({loop: false, volume:120});
 }
 
-var drumURLs = ['http://cd.textfiles.com/10000soundssongs/WAV_44S/ELDRUM44.WAV', 'http://www.engr.uvic.ca/~ajoe/3l3c484/output-comp(drum).wav', 
-    'http://www.strangefamiliar.com/sound/loops/chaos_handdrums_more-bass.wav'];
+var guitarURLs = ['http://soundcavern.free.fr/guitar/Acoustic_Guitar_Chords%20-%20Bmaj.wav', 'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Eminup.wav',
+    'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Amin.wav', 'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Dmin.wav'];
+    
+function guitarSound(i) {
+    var guitarSound = gapi.hangout.av.effects.createAudioResource(
+           guitarURLs[i]).createSound();
+     guitarSound.play({loop: false, volume:120});
+}
+
+var drumURLs = ['http://machines.hyperreal.org/machines/manufacturers/Sequential/Drumtraks/samples/tmp/Drumtraks/DT_Crash.wav', 'http://home.foni.net/~musiksamples/techno/drums/bddruck.wav', 
+    'http://muselogic.webmage.com/sounds/drums/akayamaha.wav', 'http://bigsamples.free.fr/d_kit/bdkick/909kik.wav'];
 
 function drumSound(i) {   
     var drumSound = gapi.hangout.av.effects.createAudioResource(
         drumURLs[i]).createSound();
-    drumSound.play({loop: false, volume:20});
+    drumSound.play({loop: false, volume:120});
     setTimeout(function(){return;}, 1000);
 }
 
