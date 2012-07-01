@@ -1,10 +1,11 @@
 var root = "http://web.mit.edu/tfleish/www/soundwave/";
-var root = "http://web.mit.edu/lalpert/www/soundwave/soundwave/";
 
 // Track our overlays for re-use later
 var overlays = [];
 var drumsNormal = [];
 var drumsActive = [];
+var guitarNormal = [];
+var guitarActive = [];
 
 var lastGoodEvent;
 var lastEvent;
@@ -101,14 +102,18 @@ function showDrums() {
   currentInstrument = 'drum';
   console.log("showing drums");
   hideAllOverlays();
-  for (var i=0; i<drumsNormal.length; i++) {
+  for (var i = 0; i < drumsNormal.length; i++) {
     drumsNormal[i].setVisible(true);
   }
 }
 
 function showGuitar() {
   currentInstrument = "guitar";
+  console.log("showing guitar");
   hideAllOverlays();
+  for (var i = 0; i < guitarNormal.length; i++) {
+    guitarNormal[i].setVisible(true);
+  }
 }
 
 function playDrum(i) {
@@ -121,8 +126,14 @@ function playDrum(i) {
   }, 450);
 }
 
-function playGuitar(i){
-  console.log("play guitar is not defined");
+function playGuitar(i) {
+  console.log("hitting guitar");
+  guitarActive[i].setVisible(true);
+  guitarNormal[i].setVisible(false);
+  setTimeout(function() {
+    guitarNormal[i].setVisible(true);
+    guitarActive[i].setVisible(false);
+  }, 450);
 }
 
 function showNothing() {
@@ -132,26 +143,30 @@ function showNothing() {
 
 /** For removing every overlay */
 function hideAllOverlays() {
-  for (var i=0; i<drumsNormal.length; i++) {
+  for (var i = 0; i < drumsNormal.length; i++) {
     drumsNormal[i].setVisible(false);
     drumsActive[i].setVisible(false);
   }
+  for (var i = 0; i < guitarNormal.length; i++) {
+    guitarNormal[i].setVisible(false);
+    guitarActive[i].setVisible(false);
+  }
 }
 
-//doesn't seem to work!
-function createGuitar(){
-  var canvas = document.createElement('canvas');
-  canvas.setAttribute('width', 10);
-  canvas.setAttribute('height', 400);
-  var context = canvas.getContext('2d');
-  context.lineWidth = 2;
-  context.beginPath();
-  context.moveTo(5,5);
-  context.lineTo(5,300);
-  context.stroke();
-  return canvas.toDataURL();
+// //doesn't seem to work!
+// function createGuitar(){
+//   var canvas = document.createElement('canvas');
+//   canvas.setAttribute('width', 10);
+//   canvas.setAttribute('height', 400);
+//   var context = canvas.getContext('2d');
+//   context.lineWidth = 2;
+//   context.beginPath();
+//   context.moveTo(5,5);
+//   context.lineTo(5,300);
+//   context.stroke();
+//   return canvas.toDataURL();
 
-}
+// }
 
 /** Initialize our constants, build the overlays */
 function createOverlays() {
@@ -159,10 +174,8 @@ function createOverlays() {
   var scale = .1;
   x_pos = [0, -0.45, 0, .44];
   y_pos = [-.4, 0, 0.4, 0];
-  //instrument = "drums";
   for (var i = 0; i < 4; i++){
     var drumURL = root + "images/DrumSH.png?num=" + i.toString();
-    console.log(drumURL);
     var drumImage = gapi.hangout.av.effects.createImageResource(drumURL);
     var drumOverlay = drumImage.createOverlay(
       {
@@ -183,6 +196,29 @@ function createOverlays() {
 
     drumsActive.push(drumActiveOverlay);
   }
+
+  for (var i = 0; i < 4; i++){
+    var guitarURL = root + "images/guitar.png?num=" + i.toString();
+    var guitarImage = gapi.hangout.av.effects.createImageResource(guitarURL);
+    var guitarOverlay = guitarImage.createOverlay(
+      {
+      'scale': {'magnitude': scale, 
+                'reference': gapi.hangout.av.effects.ScaleReference.WIDTH},
+      'position': {'x': x_pos[i], 'y': y_pos[i] }
+      });
+    guitarNormal.push(guitarOverlay);
+
+    var guitarActiveURL = root + "images/guitar.png?num=1" + i.toString();
+    var guitarActiveImage = gapi.hangout.av.effects.createImageResource(guitarActiveURL);
+    var guitarActiveOverlay = guitarActiveImage.createOverlay(
+      {
+      'scale': {'magnitude': scale * 1.2, 
+                'reference': gapi.hangout.av.effects.ScaleReference.WIDTH},
+      'position': {'x': x_pos[i], 'y': y_pos[i] }
+      });
+
+    guitarActive.push(guitarActiveOverlay);
+  }
 }
 
 createOverlays();
@@ -190,7 +226,6 @@ createOverlays();
 function init() {
   gapi.hangout.onApiReady.add(function(eventObj) {
     if (eventObj.isApiReady) {
-      // gapi.hangout.data.onStateChanged.add(onStateChanged);
       startHeadTracking();
       animate();
     }
