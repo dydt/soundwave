@@ -206,25 +206,25 @@ var stringURLs = [ 'http://www.learner.org/jnorth/sounds/ChordPiano.wav', 'http:
 function stringSound(i) {
     var stringSound = gapi.hangout.av.effects.createAudioResource(
         stringURLs[i]).createSound();
-    stringSound.play({loop: false, volume:120});
+    stringSound.play({loop: false, volume:200});
 }
 
 var guitarURLs = ['http://soundcavern.free.fr/guitar/Acoustic_Guitar_Chords%20-%20Bmaj.wav', 'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Eminup.wav',
-    'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Amin.wav', 'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Dmin.wav'];
+    'http://www.colorado.edu/physics/phys4830/phys4830_fa01/lab/guitar2.wav', 'http://soundcavern.free.fr/guitar/AcGuit_Minor_Chords%20-%20Dmin.wav'];
     
 function guitarSound(i) {
     var guitarSound = gapi.hangout.av.effects.createAudioResource(
            guitarURLs[i]).createSound();
-     guitarSound.play({loop: false, volume:120});
+     guitarSound.play({loop: false, volume:200});
 }
 
-var drumURLs = ['http://machines.hyperreal.org/machines/manufacturers/Sequential/Drumtraks/samples/tmp/Drumtraks/DT_Crash.wav', 'http://home.foni.net/~musiksamples/techno/drums/bddruck.wav', 
+var drumURLs = ['http://students.cs.byu.edu/~cbeacham/Virtual%20Zoo/symbol.wav', 'http://home.foni.net/~musiksamples/techno/drums/bddruck.wav', 
     'http://muselogic.webmage.com/sounds/drums/akayamaha.wav', 'http://bigsamples.free.fr/d_kit/bdkick/909kik.wav'];
 
 function drumSound(i) {   
     var drumSound = gapi.hangout.av.effects.createAudioResource(
         drumURLs[i]).createSound();
-    drumSound.play({loop: false, volume:120});
+    drumSound.play({loop: false, volume:200});
     setTimeout(function(){return;}, 1000);
 }
 
