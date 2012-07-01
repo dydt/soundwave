@@ -37,7 +37,7 @@ function handInCorner(image){
 $(document).ready(function() {
     
     // Make this sound!  :D
- //   makesound('G4');
+   makesound('G4');
     
     console.log('hi');
     
