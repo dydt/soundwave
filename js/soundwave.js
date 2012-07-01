@@ -3,6 +3,76 @@ var overlays = [];
 var drumsNormal = []
 var drumsActive = []
 
+
+
+function getNote(event, bright) {
+  if (event.tilt > 0.2) console.log('Up');
+  else if (event.tilt < -0.2) console.log('Down');
+  else if (event.pan > 0.2) console.log('Left');
+  else if (event.pan < -0.2) console.log('Right');
+}
+
+/** Animation loop */
+function animate(){
+  if (lastGoodEvent)
+  getNote(lastGoodEvent, lastEvent.hasFace);
+  requestAnimFrame(function () {
+    animate();
+  });
+}
+
+/** Standard requestAnimFrame from paulirish.com, running 30 fps */
+window.requestAnimFrame = (function (callback) {
+  return window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function(callback){
+    window.setTimeout(callback, 1000 / 30);
+  };
+})();
+
+/** Event handler */
+function onFaceTrackingChanged(event) {
+  try {
+    lastEvent = event;
+    if (event.hasFace) {
+      lastGoodEvent = event;
+    }
+  } catch(e) {
+    console.log("onFaceTrackingChanged: ERROR");
+    console.log(e);
+  }
+}
+
+/** Sets up event handler and shows a topHat
+ * from the Media app to indicate who is the current
+ * face tracked.
+ */
+function startHeadTracking() {
+  // Create hat overlay.
+  var topHat = gapi.hangout.av.effects.createImageResource(
+      'http://hangoutmediastarter.appspot.com/static/topHat.png');
+  var overlay = topHat.createFaceTrackingOverlay(
+      {'trackingFeature':
+       gapi.hangout.av.effects.FaceTrackingFeature.NOSE_ROOT,
+       'scaleWithFace': true,
+       'rotateWithFace': true,
+       'scale': 1.0});
+  overlay.setVisible(true);
+
+  // Add event handler.
+  gapi.hangout.av.effects.onFaceTrackingDataChanged.
+      add(onFaceTrackingChanged);
+
+  console.log('Started head tracking');    
+}
+
+
+
+
+
 /** Responds to buttons
  * @param {string} name Item to show.
  */
@@ -72,8 +142,8 @@ function createOverlays() {
                 'reference': gapi.hangout.av.effects.ScaleReference.WIDTH},
       'position': {'x': x_pos[i], 'y': y_pos[i] }
       });
-    drumsNormal.append(drumOverlay);
-    drumsActive.append(drumActiveOverlay);
+    drumsNormal.push(drumOverlay);
+    drumsActive.push(drumActiveOverlay);
   }
 }
 /*
@@ -88,7 +158,7 @@ function createOverlays() {
       'position': {'x': -0.45, 'y': .1 }
       });
 */
-}
+
 
 createOverlays();
 
@@ -145,7 +215,9 @@ function onStateChanged(event) {
 function init() {
   gapi.hangout.onApiReady.add(function(eventObj) {
     if (eventObj.isApiReady) {
-      gapi.hangout.data.onStateChanged.add(onStateChanged);
+      // gapi.hangout.data.onStateChanged.add(onStateChanged);
+      startHeadTracking();
+      animate();
     }
   });
 }
