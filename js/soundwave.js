@@ -10,21 +10,32 @@ var lastEvent;
 var currentInstrument = "";
 
 function getNote(event, bright) {
-  if (event.tilt > 0.2) {
-    console.log('Up');
-    hitDrum(0);
+  if (currentInstrument == 'drum') {
+    if (event.tilt > 0.25) {
+      console.log('Up');
+      playDrum(0);
+      sayPiano1();
+    }
+    else if (event.tilt < -0.1) {
+      console.log('Down');
+      playDrum(2);
+      sayPiano1();
+    }
+    else if (event.pan > 0.25) {
+      console.log('Left');
+      playDrum(3);
+      sayPiano1();
+    }
+    else if (event.pan < -0.25) {
+      console.log('Right');
+      playDrum(1);
+      sayPiano1();
+    }
   }
-  else if (event.tilt < -0.2) {
-    console.log('Down');
-    hitDrum(2);
-  }
-  else if (event.pan > 0.2) {
-    console.log('Left');
-    hitDrum(3);
-  }
-  else if (event.pan < -0.2) {
-    console.log('Right');
-    hitDrum(1);
+  else if (currentInstrument == 'guitar') {
+    if (event.pan > 0.3) {
+      console.log('');
+    }
   }
 }
 
@@ -67,27 +78,15 @@ function onFaceTrackingChanged(event) {
  * face tracked.
  */
 function startHeadTracking() {
-  // Create hat overlay.
-  var topHat = gapi.hangout.av.effects.createImageResource(
-      'http://hangoutmediastarter.appspot.com/static/topHat.png');
-  var overlay = topHat.createFaceTrackingOverlay(
-      {'trackingFeature':
-       gapi.hangout.av.effects.FaceTrackingFeature.NOSE_ROOT,
-       'scaleWithFace': true,
-       'rotateWithFace': true,
-       'scale': 1.0});
-  overlay.setVisible(true);
-
-  // Add event handler.
   gapi.hangout.av.effects.onFaceTrackingDataChanged.
       add(onFaceTrackingChanged);
-
   console.log('Started head tracking');    
 }
 
 
 function showDrums() {
-  currentInstrument = "drum"; 
+  currentInstrument = 'drum';
+  sayPiano1();
   console.log("showing drums");
   //hideAllOverlays();
   for (var i=0; i<drumsNormal.length; i++) {
@@ -101,7 +100,7 @@ function showGuitar() {
   currentInstrument = "guitar";
 }
 
-function playDrum(i){
+function playDrum(i) {
   console.log("hitting drum");
   drumsActive[i].setVisible(true);
   drumsNormal[i].setVisible(false);
@@ -243,5 +242,41 @@ function init() {
     }
   });
 }
+
+// Sound stuff
+
+var piano1SoundURL =
+    'http://www.learner.org/jnorth/sounds/ChordPiano.wav';
+
+
+var piano1Sound = gapi.hangout.av.effects.createAudioResource(
+    piano1SoundURL).createSound();
+
+
+function sayPiano1() {
+  // There can only be one active resource, Audio or Image.                                                       
+  // By playing the sound, we activate this resource                                                              
+  // and will automatically hide all the other overlays.                                                          
+  // Thus, we hide the scaling controls.                                                                          
+//  setControlVisibility(false);                                                                                  
+    piano1Sound.play({loop: false, volume:20});
+}
+
+var drumURLs = ['http://cd.textfiles.com/10000soundssongs/WAV_44S/ELDRUM44.WAV', 'http://www.engr.uvic.ca/~ajoe/3l3c484/output-comp(drum).wav', 
+    'http://www.strangefamiliar.com/sound/loops/chaos_handdrums_more-bass.wav'];
+
+function sayDrum(i) {
+  // There can only be one active resource, Audio or Image.                                                       
+  // By playing the sound, we activate this resource                                                              
+  // and will automatically hide all the other overlays.                                                          
+  // Thus, we hide the scaling controls.                                                                          
+//  setControlVisibility(false);     
+    var drumSound = gapi.hangout.av.effects.createAudioResource(
+        drumURLs[i]).createSound();
+    drumSound.play({loop: false, volume:20});
+}
+
+
+
 
 gadgets.util.registerOnLoadHandler(init);
