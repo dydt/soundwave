@@ -8,35 +8,47 @@ var drumsActive = [];
 
 var lastGoodEvent;
 var lastEvent;
-var currentInstrument = "";
+
+var currentInstrument;
+
+var timeoutCounter = 61;
+
 
 function getNote(event, bright) {
-  if (currentInstrument == 'drum') {
-    if (event.tilt > 0.25) {
-      console.log('Up');
-      playDrum(0);
-      drumSound(0);
+  if (timeoutCounter > 60) {
+    if (currentInstrument == 'drum') {
+      if (event.tilt > 0.35) {
+        console.log('Up');
+        playDrum(0);
+        drumSound(0);
+        timeoutCounter = 0;
+      }
+      else if (event.tilt < -0.1) {
+        console.log('Down');
+        playDrum(2);
+        drumSound(2);
+        timeoutCounter = 0;
+      }
+      else if (event.pan > 0.25) {
+        console.log('Left');
+        playDrum(3);
+        drumSound(1);
+        timeoutCounter = 0;
+      }
+      else if (event.pan < -0.25) {
+        console.log('Right');
+        playDrum(1);
+        drumSound(1);
+        timeoutCounter = 0;
+      }
     }
-    else if (event.tilt < -0.12) {
-      console.log('Down');
-      playDrum(2);
-      drumSound(2)
+    else if (currentInstrument == 'guitar') {
+      if (event.pan > 0.3) {
+        console.log('');
+      }
     }
-    else if (event.pan > 0.25) {
-      console.log('Left');
-      playDrum(3);
-      drumSound(1);
-    }
-    else if (event.pan < -0.25) {
-      console.log('Right');
-      playDrum(1);
-      drumSound(1);
-    }
-  }
-  else if (currentInstrument == 'guitar') {
-    if (event.pan > 0.3) {
-      console.log('');
-    }
+  } else {
+    timeoutCounter += 1;
   }
 }
 
