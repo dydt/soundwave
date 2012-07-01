@@ -270,6 +270,21 @@ function sayPiano1() {
     piano1Sound.play({loop: false, volume:20});
 }
 
+var drumURLs = ['http://cd.textfiles.com/10000soundssongs/WAV_44S/ELDRUM44.WAV', 'http://www.engr.uvic.ca/~ajoe/3l3c484/output-comp(drum).wav', 
+    'http://www.strangefamiliar.com/sound/loops/chaos_handdrums_more-bass.wav'];
+
+function sayDrum(i) {
+  // There can only be one active resource, Audio or Image.                                                       
+  // By playing the sound, we activate this resource                                                              
+  // and will automatically hide all the other overlays.                                                          
+  // Thus, we hide the scaling controls.                                                                          
+//  setControlVisibility(false);     
+    var drumSound = gapi.hangout.av.effects.createAudioResource(
+        drumURLs[i]).createSound();
+    drumSound.play({loop: false, volume:20});
+}
+
+
 
 
 gadgets.util.registerOnLoadHandler(init);
