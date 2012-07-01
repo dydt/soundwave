@@ -249,4 +249,25 @@ function init() {
   });
 }
 
+// Sound stuff
+
+var piano1SoundURL =
+    'http://www.learner.org/jnorth/sounds/ChordPiano.wav';
+
+
+var piano1Sound = gapi.hangout.av.effects.createAudioResource(
+    piano1SoundURL).createSound();
+
+
+function sayPiano1() {
+  // There can only be one active resource, Audio or Image.                                                       
+  // By playing the sound, we activate this resource                                                              
+  // and will automatically hide all the other overlays.                                                          
+  // Thus, we hide the scaling controls.                                                                          
+//  setControlVisibility(false);                                                                                  
+    piano1Sound.play({loop: false, volume:20});
+}
+
+
+
 gadgets.util.registerOnLoadHandler(init);
