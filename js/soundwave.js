@@ -1,6 +1,23 @@
 var IMG_WIDTH = 320;
 var IMG_HEIGHT = 240;
 
+function getPixelAt(image, x, y){
+  var index = 4 * (y*IMG_WIDTH + x);
+  //console.log(index);
+  //console.log(image);
+  var color = [image[index], image[index+1], image[index+2], image[index+3]];
+  return color;
+}
+
+function handInCorner(image){
+  var color = getPixelAt(image, 310, 0);
+  var sum = color[0] + color[1] + color[2];
+  console.log(sum);
+  if (sum < 150) {
+    console.log("dark!");
+  }
+}
+
 $(document).ready(function() {
 	var pos = 0;
 	var ctx = null;
@@ -19,13 +36,16 @@ $(document).ready(function() {
   	var col = data.split(";");
   	var img = image;
   	for (var i = 0; i < IMG_WIDTH; i++) {
-  		var tmp = parseInt(col[i]);
+  		var tmp = parseInt(col[IMG_WIDTH - 1 - i]);
  			img.data[pos + 0] = (tmp >> 16) & 0xff;
  			img.data[pos + 1] = (tmp >> 8) & 0xff;
 			img.data[pos + 2] = tmp & 0xff;
 			img.data[pos + 3] = 0xff;
 			pos += 4;
   	}
+
+    handInCorner(img.data);
+
   	if (pos >= 4 * IMG_WIDTH * IMG_HEIGHT) {
   		ctx.putImageData(img, 0, 0);
   		pos = 0;
