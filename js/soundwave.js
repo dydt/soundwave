@@ -7,7 +7,7 @@ var drumsActive = [];
 
 var lastGoodEvent;
 var lastEvent;
-
+var currentInstrument = "";
 
 function getNote(event, bright) {
   if (event.tilt > 0.2) {
@@ -86,21 +86,8 @@ function startHeadTracking() {
 }
 
 
-
-
-
-/** Responds to buttons
- * @param {string} name Item to show.
- */
-function showOverlay(name) {
-  console.log("showing overlay");
-  console.log(name);
-  hideAllOverlays();
-  currentItem = name;
-  overlays[currentItem].setVisible(true);
-}
-
 function showDrums() {
+  currentInstrument = "drum"; 
   console.log("showing drums");
   //hideAllOverlays();
   for (var i=0; i<drumsNormal.length; i++) {
@@ -110,7 +97,11 @@ function showDrums() {
   //hitDrum(3);
 }
 
-function hitDrum(i){
+function showGuitar() {
+  currentInstrument = "guitar";
+}
+
+function playDrum(i){
   console.log("hitting drum");
   drumsActive[i].setVisible(true);
   drumsNormal[i].setVisible(false);
@@ -118,6 +109,10 @@ function hitDrum(i){
     drumsNormal[i].setVisible(true);
     drumsActive[i].setVisible(false);
     },250);
+}
+
+function playGuitar(i){
+
 }
 
 function showNothing() {
