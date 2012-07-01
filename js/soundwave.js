@@ -8,23 +8,36 @@ var drumsActive = [];
 var lastGoodEvent;
 var lastEvent;
 
+var currentInstrument;
+
 
 function getNote(event, bright) {
-  if (event.tilt > 0.2) {
-    console.log('Up');
-    hitDrum(0);
+  if (currentInstrument == 'drum') {
+    if (event.tilt > 0.25) {
+      console.log('Up');
+      playDrum(0);
+      sayPiano1();
+    }
+    else if (event.tilt < -0.1) {
+      console.log('Down');
+      playDrum(2);
+      sayPiano1();
+    }
+    else if (event.pan > 0.25) {
+      console.log('Left');
+      playDrum(3);
+      sayPiano1();
+    }
+    else if (event.pan < -0.25) {
+      console.log('Right');
+      playDrum(1);
+      sayPiano1();
+    }
   }
-  else if (event.tilt < -0.2) {
-    console.log('Down');
-    hitDrum(2);
-  }
-  else if (event.pan > 0.2) {
-    console.log('Left');
-    hitDrum(3);
-  }
-  else if (event.pan < -0.2) {
-    console.log('Right');
-    hitDrum(1);
+  else if (currentInstrument == 'guitar') {
+    if (event.pan > 0.3) {
+      console.log('');
+    }
   }
 }
 
@@ -67,21 +80,8 @@ function onFaceTrackingChanged(event) {
  * face tracked.
  */
 function startHeadTracking() {
-  // Create hat overlay.
-  var topHat = gapi.hangout.av.effects.createImageResource(
-      'http://hangoutmediastarter.appspot.com/static/topHat.png');
-  var overlay = topHat.createFaceTrackingOverlay(
-      {'trackingFeature':
-       gapi.hangout.av.effects.FaceTrackingFeature.NOSE_ROOT,
-       'scaleWithFace': true,
-       'rotateWithFace': true,
-       'scale': 1.0});
-  overlay.setVisible(true);
-
-  // Add event handler.
   gapi.hangout.av.effects.onFaceTrackingDataChanged.
       add(onFaceTrackingChanged);
-
   console.log('Started head tracking');    
 }
 
@@ -101,6 +101,8 @@ function showOverlay(name) {
 }
 
 function showDrums() {
+  currentInstrument = 'drum';
+  sayPiano1();
   console.log("showing drums");
   //hideAllOverlays();
   for (var i=0; i<drumsNormal.length; i++) {
@@ -110,7 +112,7 @@ function showDrums() {
   //hitDrum(3);
 }
 
-function hitDrum(i){
+function playDrum(i) {
   console.log("hitting drum");
   drumsActive[i].setVisible(true);
   drumsNormal[i].setVisible(false);
