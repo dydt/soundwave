@@ -10,34 +10,44 @@ var lastEvent;
 
 var currentInstrument;
 
+var timeoutCounter = 61;
+
 
 function getNote(event, bright) {
-  if (currentInstrument == 'drum') {
-    if (event.tilt > 0.25) {
-      console.log('Up');
-      playDrum(0);
-      sayPiano1();
+  if (timeoutCounter > 60) {
+    if (currentInstrument == 'drum') {
+      if (event.tilt > 0.35) {
+        console.log('Up');
+        playDrum(0);
+        sayPiano1();
+        timeoutCounter = 0;
+      }
+      else if (event.tilt < -0.1) {
+        console.log('Down');
+        playDrum(2);
+        sayPiano1();
+        timeoutCounter = 0;
+      }
+      else if (event.pan > 0.25) {
+        console.log('Left');
+        playDrum(3);
+        sayPiano1();
+        timeoutCounter = 0;
+      }
+      else if (event.pan < -0.25) {
+        console.log('Right');
+        playDrum(1);
+        sayPiano1();
+        timeoutCounter = 0;
+      }
     }
-    else if (event.tilt < -0.1) {
-      console.log('Down');
-      playDrum(2);
-      sayPiano1();
+    else if (currentInstrument == 'guitar') {
+      if (event.pan > 0.3) {
+        console.log('');
+      }
     }
-    else if (event.pan > 0.25) {
-      console.log('Left');
-      playDrum(3);
-      sayPiano1();
-    }
-    else if (event.pan < -0.25) {
-      console.log('Right');
-      playDrum(1);
-      sayPiano1();
-    }
-  }
-  else if (currentInstrument == 'guitar') {
-    if (event.pan > 0.3) {
-      console.log('');
-    }
+  } else {
+    timeoutCounter += 1;
   }
 }
 
@@ -102,7 +112,6 @@ function showOverlay(name) {
 
 function showDrums() {
   currentInstrument = 'drum';
-  sayPiano1();
   console.log("showing drums");
   //hideAllOverlays();
   for (var i=0; i<drumsNormal.length; i++) {
