@@ -18,6 +18,16 @@ function handInCorner(image){
   }
 }
 
+function playDrums(image){
+  var color = getPixelAt(image, 310, 0);
+  var sum = color[0] + color[1] + color[2];
+  console.log(sum);
+  if (sum < 150) {
+    console.log("dark!");
+  }
+}
+
+
 $(document).ready(function() {
 	var pos = 0;
 	var ctx = null;
@@ -38,11 +48,11 @@ $(document).ready(function() {
   	for (var i = 0; i < IMG_WIDTH; i++) {
   		var tmp = parseInt(col[IMG_WIDTH - 1 - i]);
  			img.data[pos + 0] = (tmp >> 16) & 0xff;
- 			img.data[pos + 1] = (tmp >> 8) & 0xff;
-			img.data[pos + 2] = tmp & 0xff;
+ 		  img.data[pos + 1] = (tmp >> 8) & 0xff;
+		 	img.data[pos + 2] = tmp & 0xff;
 			img.data[pos + 3] = 0xff;
 			pos += 4;
-  	}
+    }
 
     handInCorner(img.data);
 
